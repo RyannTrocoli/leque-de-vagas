@@ -1,0 +1,134 @@
+/* CSS comum ate a aula 08, quando o Tailwind entra no curso. */
+
+:root {
+  --fundo: #f7f6f2;
+  --superficie: #ffffff;
+  --texto: #1d1d27;
+  --texto-suave: #5d5d6e;
+  --borda: #e3e1da;
+  --primaria: #5b3df5;
+  --primaria-escura: #4329cc;
+  --sucesso: #1d7a4a;
+  --perigo: #b42318;
+  --raio: 12px;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  background: var(--fundo);
+  color: var(--texto);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.6;
+}
+
+a { color: var(--primaria); }
+a:hover { color: var(--primaria-escura); }
+
+h1, h2, h3 { line-height: 1.2; }
+h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 0.3rem 0 1rem; }
+
+.container { width: min(1100px, 100% - 32px); margin-inline: auto; }
+.conteudo { min-height: 70vh; padding-block: 32px 64px; }
+
+/* acessibilidade: o link aparece so quando recebe foco pelo teclado */
+.pular-conteudo { position: absolute; left: -999px; top: 8px; background: var(--texto); color: #fff; padding: 8px 12px; border-radius: 8px; }
+.pular-conteudo:focus { left: 8px; z-index: 10; }
+
+/* cabecalho, menu e rodape */
+.cabecalho { background: var(--superficie); border-bottom: 1px solid var(--borda); }
+.cabecalho-conteudo { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px; flex-wrap: wrap; }
+.marca { font-weight: 800; font-size: 1.15rem; color: var(--texto); text-decoration: none; }
+.menu { display: flex; gap: 6px; list-style: none; margin: 0; padding: 0; }
+.menu-link { display: block; padding: 6px 12px; border-radius: 999px; color: var(--texto-suave); text-decoration: none; font-weight: 600; }
+.menu-link:hover { background: var(--fundo); color: var(--texto); }
+.menu-link.ativo { background: var(--primaria); color: #fff; }
+.rodape { border-top: 1px solid var(--borda); background: var(--superficie); color: var(--texto-suave); font-size: 0.9rem; }
+.rodape-conteudo { display: flex; justify-content: space-between; gap: 16px; padding-block: 20px; flex-wrap: wrap; }
+.rodape nav { display: flex; gap: 16px; }
+
+/* textos e botoes */
+.sobretitulo { display: inline-block; color: var(--primaria); font-weight: 700; font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.botao { display: inline-block; background: var(--primaria); color: #fff; border: 0; border-radius: 999px; padding: 10px 20px; font: inherit; font-weight: 700; text-decoration: none; cursor: pointer; }
+.botao:hover { background: var(--primaria-escura); color: #fff; }
+.botao:disabled { opacity: 0.6; cursor: wait; }
+.botao-secundario { background: transparent; color: var(--primaria); border: 2px solid var(--primaria); }
+.botao-secundario:hover { background: var(--primaria); }
+.botao-texto { background: none; border: 0; padding: 0; font: inherit; font-weight: 600; color: var(--primaria); cursor: pointer; }
+.botao-texto.perigo { color: var(--perigo); }
+.link-seta { font-weight: 600; text-decoration: none; }
+.link-voltar { display: inline-block; margin-bottom: 16px; text-decoration: none; }
+
+/* home */
+.hero { padding-block: 40px; max-width: 720px; }
+.hero-texto { font-size: 1.15rem; color: var(--texto-suave); }
+.hero-acoes { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
+
+/* listagens e cartoes */
+.topo-pagina { margin-bottom: 24px; }
+.topo-pagina p { color: var(--texto-suave); }
+.topo-com-numeros { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; }
+.grade-vagas, .grade-empresas { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.card-vaga, .card-empresa { background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio); padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.card-vaga h3, .card-empresa h2 { margin: 0; font-size: 1.1rem; }
+.card-vaga h3 a, .card-empresa h2 a { color: var(--texto); text-decoration: none; }
+.card-vaga-topo, .card-vaga-rodape { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.card-vaga-rodape { margin-top: auto; }
+.card-empresa p { margin: 0; color: var(--texto-suave); }
+.empresa-mini { font-size: 0.85rem; font-weight: 700; color: var(--texto-suave); }
+.metadados { margin: 4px 0 0; color: var(--texto-suave); font-size: 0.9rem; }
+.selo { font-size: 0.75rem; font-weight: 700; border-radius: 999px; padding: 2px 10px; }
+.selo-iniciante { background: #e3f4ea; color: var(--sucesso); }
+.marca-simbolo { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 10px; background: #ece8ff; color: var(--primaria); font-weight: 800; }
+.marca-simbolo.grande { width: 64px; height: 64px; font-size: 1.4rem; }
+
+/* filtros e numeros */
+.filtros { display: grid; gap: 16px; margin-bottom: 16px; }
+.grupo-filtro > span { display: block; font-weight: 600; margin-bottom: 6px; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip { border: 1px solid var(--borda); background: var(--superficie); border-radius: 999px; padding: 6px 14px; font: inherit; cursor: pointer; }
+.chip.ativo { background: var(--primaria); border-color: var(--primaria); color: #fff; }
+.resultado-resumo, .numeros-catalogo { display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; margin-bottom: 16px; color: var(--texto-suave); }
+.resultado-resumo strong, .numeros-catalogo strong { color: var(--texto); }
+.estado-vazio { display: grid; gap: 4px; padding: 32px; text-align: center; background: var(--superficie); border: 1px dashed var(--borda); border-radius: var(--raio); color: var(--texto-suave); }
+
+/* esqueletos de carregamento */
+.esqueleto { background: linear-gradient(90deg, #ebe9e3 25%, #f4f3ef 50%, #ebe9e3 75%); background-size: 200% 100%; animation: brilho 1.2s infinite; border-radius: var(--raio); }
+.esqueleto-card { height: 180px; }
+.esqueleto-numeros { width: 260px; height: 28px; }
+@keyframes brilho { to { background-position: -200% 0; } }
+
+/* detalhe */
+.pagina-detalhe article, .bloco-detalhe { background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio); padding: 24px; }
+.pagina-detalhe dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; }
+.pagina-detalhe dt { font-weight: 700; }
+.pagina-detalhe dd { margin: 0; }
+.descricao-vaga, .texto-longo p { white-space: pre-line; }
+.cabecalho-empresa { display: flex; gap: 20px; align-items: center; margin-bottom: 24px; flex-wrap: wrap; }
+.cabecalho-empresa h1 { margin: 0.2rem 0; }
+.links-empresa { display: flex; gap: 16px; flex-wrap: wrap; }
+
+/* abas */
+.abas-botoes { display: flex; gap: 8px; border-bottom: 1px solid var(--borda); margin-bottom: 20px; }
+.abas-botoes button { background: none; border: 0; border-bottom: 3px solid transparent; padding: 10px 14px; font: inherit; font-weight: 600; color: var(--texto-suave); cursor: pointer; }
+.abas-botoes button.ativa { color: var(--primaria); border-bottom-color: var(--primaria); }
+
+/* formularios */
+.formulario { display: grid; gap: 16px; max-width: 640px; background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio); padding: 24px; }
+.formulario label, .campo { display: grid; gap: 6px; font-weight: 600; }
+.formulario input:not([type="checkbox"]), .formulario select, .formulario textarea, .campo input {
+  font: inherit; font-weight: 400; padding: 10px 12px; border: 1px solid var(--borda); border-radius: 8px; background: #fff; width: 100%;
+}
+.formulario small, .erro-campo { color: var(--perigo); font-weight: 500; }
+.aviso { padding: 12px 16px; border-radius: 8px; margin: 0; }
+.aviso.sucesso { background: #e3f4ea; color: var(--sucesso); }
+.aviso.erro-geral { background: #fdecea; color: var(--perigo); }
+
+:focus-visible { outline: 3px solid var(--primaria); outline-offset: 2px; }
+
+@media (max-width: 600px) {
+  .cabecalho-conteudo { justify-content: center; }
+  .formulario { padding: 16px; }
+}
