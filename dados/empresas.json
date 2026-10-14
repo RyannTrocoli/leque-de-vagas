@@ -1,0 +1,32 @@
+[
+  {
+    "slug": "aurora-tech",
+    "nome": "Aurora Tech",
+    "sobre": "A Aurora Tech desenvolve produtos digitais para redes de clinicas e laboratorios, com foco em agendamento online e prontuario acessivel. O time de produto tem cerca de 40 pessoas e trabalha em ciclos de duas semanas, com revisao de codigo obrigatoria e documentacao das decisoes tecnicas.\n\nA empresa mantem um programa de entrada para quem esta migrando de carreira: as primeiras semanas sao de pareamento com uma pessoa mentora, e as tarefas crescem de dificuldade aos poucos. Valorizamos curiosidade, comunicacao clara e vontade de aprender mais do que anos de experiencia.",
+    "site": "https://auroratech.example.com"
+  },
+  {
+    "slug": "farol-qa",
+    "nome": "Farol QA",
+    "sobre": "A Farol QA e uma consultoria de qualidade de software que atende fintechs e e-commerces. Nosso trabalho vai de testes exploratorios a automacao de ponta a ponta, sempre lado a lado com os times de desenvolvimento dos clientes.\n\nAcreditamos que qualidade se aprende na pratica. Por isso montamos trilhas internas de estudo, revisamos casos de teste em grupo e incentivamos quem chega a fazer perguntas desde o primeiro dia. Muitas pessoas do nosso time vieram de outras areas, como atendimento, logistica e educacao.",
+    "site": "https://farolqa.example.com"
+  },
+  {
+    "slug": "nexo-dados",
+    "nome": "Nexo Dados",
+    "sobre": "A Nexo Dados ajuda empresas de varejo a entender o proprio negocio com dados confiaveis. Construimos pipelines, paineis e modelos simples de previsao de demanda, sempre explicando os limites de cada analise para quem vai tomar a decisao.\n\nO time e remoto e distribuido pelo Brasil. Temos rituais semanais de troca de conhecimento, um guia interno de boas praticas em SQL e Python e acompanhamento proximo para pessoas juniores durante os primeiros meses.",
+    "site": "https://nexodados.example.com"
+  },
+  {
+    "slug": "orbit-mobile",
+    "nome": "Orbit Mobile",
+    "sobre": "A Orbit Mobile cria aplicativos para cooperativas de transporte e entregas, usados todos os dias por milhares de motoristas. Trabalhamos com React Native e Kotlin, e cada funcionalidade nasce de conversas com quem realmente usa o aplicativo na rua.\n\nGostamos de times pequenos e autonomos. Quem entra participa de todas as etapas, do desenho da tela ao acompanhamento das metricas depois da publicacao, sempre com apoio de pessoas mais experientes e espaco para errar e aprender.",
+    "site": "https://orbitmobile.example.com"
+  },
+  {
+    "slug": "ponte-digital",
+    "nome": "Ponte Digital",
+    "sobre": "A Ponte Digital desenvolve sistemas de integracao para orgaos publicos e empresas de servicos, conectando cadastros, pagamentos e atendimento. Nosso dia a dia envolve APIs, bancos relacionais e muito cuidado com seguranca e disponibilidade.\n\nTemos escritorio em Fortaleza e times remotos. Investimos em formacao continua com grupos de estudo de Java e Spring, e mantemos vagas de entrada todos os anos para quem esta comecando na area de tecnologia.",
+    "site": "https://pontedigital.example.com"
+  }
+]

@@ -1,12 +1,12 @@
-import type { Vaga } from "@/lib/tipos";
+import type { Empresa, Vaga } from "@/lib/tipos";
+import empresasLocais from "@/dados/empresas.json";
 import vagasLocais from "@/dados/vagas.json";
 import { prisma } from "@/lib/prisma";
 import type { Vaga as VagaDoBanco } from "@prisma/client";
 
-type EmpresaDaFonte = { slug: string; nome: string; sobre: string; site: string };
 type CandidaturaRecebida = { vagaId: string; nome: string; email: string; habilidades: string[] };
 
-const empresasEditadas = new Map<string, EmpresaDaFonte>();
+const empresasEditadas = new Map<string, Empresa>();
 const candidaturasRecebidas: CandidaturaRecebida[] = [];
 
 const FONTE_DADOS =
@@ -60,14 +60,16 @@ export async function buscarVaga(id: string): Promise<Vaga | undefined> {
   return (await listarVagas()).find((vaga) => vaga.id === id);
 }
 
-export async function listarEmpresas(): Promise<EmpresaDaFonte[]> {
-  const publicadas = await buscarJson<EmpresaDaFonte[]>("empresas.json", 3600, "empresas");
+export async function listarEmpresas(): Promise<Empresa[]> {
+  // Uma hora: perfil de empresa muda bem menos que vaga. A copia local cobre a
+  // rede fora do ar e o periodo em que empresas.json ainda nao chegou na main.
+  const publicadas = await buscarJson<Empresa[]>("empresas.json", 3600, "empresas", empresasLocais as Empresa[]);
   const porSlug = new Map(publicadas.map((empresa) => [empresa.slug, empresa]));
   for (const empresa of empresasEditadas.values()) porSlug.set(empresa.slug, empresa);
   return [...porSlug.values()];
 }
 
-export async function buscarEmpresa(slug: string): Promise<EmpresaDaFonte | undefined> {
+export async function buscarEmpresa(slug: string): Promise<Empresa | undefined> {
   return (await listarEmpresas()).find((empresa) => empresa.slug === slug);
 }
 
@@ -106,6 +108,6 @@ export function guardarCandidatura(candidatura: CandidaturaRecebida): void {
   candidaturasRecebidas.push(candidatura);
 }
 
-export function guardarEmpresa(empresa: EmpresaDaFonte): void {
+export function guardarEmpresa(empresa: Empresa): void {
   empresasEditadas.set(empresa.slug, empresa);
 }
