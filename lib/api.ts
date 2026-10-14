@@ -1,0 +1,87 @@
+import type { Vaga } from "@/lib/tipos";
+import vagasLocais from "@/dados/vagas.json";
+import { prisma } from "@/lib/prisma";
+import type { Vaga as VagaDoBanco } from "@prisma/client";
+
+type EmpresaDaFonte = { slug: string; nome: string; sobre: string; site: string };
+type CandidaturaRecebida = { vagaId: string; nome: string; email: string; habilidades: string[] };
+
+const idsArquivados = new Set<string>();
+const empresasEditadas = new Map<string, EmpresaDaFonte>();
+const candidaturasRecebidas: CandidaturaRecebida[] = [];
+
+const FONTE_DADOS =
+  process.env.FONTE_DADOS ??
+  "https://raw.githubusercontent.com/ryann-trocoli/leque-de-vagas/main/dados";
+
+async function buscarJson<T>(arquivo: string, revalidate: number, tag: string, fallback?: T): Promise<T> {
+  try {
+    const resposta = await fetch(`${FONTE_DADOS}/${arquivo}`, {
+      // Sessenta segundos limitam a espera por uma vaga publicada no JSON.
+      next: { revalidate, tags: [tag] },
+    });
+    if (!resposta.ok) {
+      throw new Error(`Nao foi possivel carregar ${arquivo} (${resposta.status}).`);
+    }
+    return (await resposta.json()) as T;
+  } catch (erro) {
+    if (fallback !== undefined) return fallback;
+    throw erro;
+  }
+}
+
+function vagaPublica(vaga: VagaDoBanco): Vaga {
+  return {
+    id: vaga.id,
+    titulo: vaga.titulo,
+    empresa: vaga.empresa,
+    empresaSlug: vaga.empresaSlug,
+    area: vaga.area,
+    senioridade: vaga.senioridade,
+    local: vaga.local,
+    aceitaIniciante: vaga.aceitaIniciante,
+    descricao: vaga.descricao,
+    publicadaEm: vaga.publicadaEm ?? undefined,
+  };
+}
+
+export async function listarVagas(): Promise<Vaga[]> {
+  const [publicadas, gravadas] = await Promise.all([
+    buscarJson<Vaga[]>("vagas.json", 60, "vagas", vagasLocais as Vaga[]),
+    prisma.vaga.findMany({ orderBy: { criadaEm: "desc" } }),
+  ]);
+  const idsGravados = new Set(gravadas.map((vaga) => vaga.id));
+  return [...gravadas.map(vagaPublica), ...publicadas.filter((vaga) => !idsGravados.has(vaga.id))]
+    .filter((vaga) => !idsArquivados.has(vaga.id));
+}
+
+export async function buscarVaga(id: string): Promise<Vaga | undefined> {
+  return (await listarVagas()).find((vaga) => vaga.id === id);
+}
+
+export async function listarEmpresas(): Promise<EmpresaDaFonte[]> {
+  const publicadas = await buscarJson<EmpresaDaFonte[]>("empresas.json", 3600, "empresas");
+  const porSlug = new Map(publicadas.map((empresa) => [empresa.slug, empresa]));
+  for (const empresa of empresasEditadas.values()) porSlug.set(empresa.slug, empresa);
+  return [...porSlug.values()];
+}
+
+export async function buscarEmpresa(slug: string): Promise<EmpresaDaFonte | undefined> {
+  return (await listarEmpresas()).find((empresa) => empresa.slug === slug);
+}
+
+export async function guardarVaga(vaga: Vaga): Promise<void> {
+  await prisma.vaga.create({ data: vaga });
+}
+
+export function arquivarVaga(id: string): void {
+  idsArquivados.add(id);
+}
+
+export function guardarCandidatura(candidatura: CandidaturaRecebida): void {
+  candidaturasRecebidas.push(candidatura);
+}
+
+export function guardarEmpresa(empresa: EmpresaDaFonte): void {
+  empresasEditadas.set(empresa.slug, empresa);
+}
