@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import BotaoCopiarLink from "@/components/BotaoCopiarLink";
 import DescricaoDaVaga from "@/components/DescricaoDaVaga";
+import FormularioDeCandidatura from "@/components/FormularioDeCandidatura";
 import { buscarVaga, listarVagas } from "@/lib/api";
 
 type Props = { params: Promise<{ id: string }> };
@@ -28,6 +29,7 @@ export default async function PaginaDaVaga({ params }: Props) {
         </dl>
         <h2>Descrição</h2>
         <DescricaoDaVaga texto={vaga.descricao} />
+        <FormularioDeCandidatura vagaId={vaga.id} tituloDaVaga={vaga.titulo} />
         <BotaoCopiarLink />
       </article>
     </main>
