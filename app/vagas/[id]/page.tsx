@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import BotaoCopiarLink from "@/components/BotaoCopiarLink";
+import DescricaoDaVaga from "@/components/DescricaoDaVaga";
 import { vagas } from "@/data/vagas";
 
 type Props = { params: Promise<{ id: string }> };
@@ -21,7 +23,8 @@ export default async function PaginaDaVaga({ params }: Props) {
           <dt>Local</dt><dd>{vaga.local}</dd>
         </dl>
         <h2>Descrição</h2>
-        <p>{vaga.descricao}</p>
+        <DescricaoDaVaga texto={vaga.descricao} />
+        <BotaoCopiarLink />
       </article>
     </main>
   );

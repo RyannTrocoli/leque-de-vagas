@@ -76,6 +76,72 @@ export const vagas: Vaga[] = [
     "local": "Presencial · Fortaleza",
     "aceitaIniciante": false,
     "descricao": "A pessoa desenvolvedora sera responsavel por evoluir servicos em Java e Spring, revisar mudancas e apoiar o desenho de contratos entre sistemas. O trabalho inclui testes automatizados, banco de dados relacional e acompanhamento de metricas em producao. Esperamos experiencia anterior com APIs e capacidade de investigar problemas sem perder de vista o impacto para quem usa. Valorizamos documentacao objetiva, colaboracao e disposicao para orientar colegas menos experientes."
+  },
+  {
+    "id": "7",
+    "titulo": "Estagio em Desenvolvimento Mobile",
+    "empresa": "Orbit Mobile",
+    "empresaSlug": "orbit-mobile",
+    "area": "Mobile",
+    "senioridade": "Estagio",
+    "local": "Hibrido · Belo Horizonte",
+    "aceitaIniciante": true,
+    "descricao": "No estagio voce acompanha a criacao de funcionalidades para aplicativos de mobilidade, aprende a testar em aparelhos diferentes e participa das conversas sobre acessibilidade. O time oferece pareamento e uma trilha de onboarding com pequenas entregas reais. Pedimos fundamentos de programacao, interesse por desenvolvimento mobile e disponibilidade para dois dias presenciais. Nao e necessario ter publicado um aplicativo; queremos conhecer seus estudos e a forma como voce resolve problemas."
+  },
+  {
+    "id": "8",
+    "titulo": "Pessoa Desenvolvedora React Native Junior",
+    "empresa": "Orbit Mobile",
+    "empresaSlug": "orbit-mobile",
+    "area": "Mobile",
+    "senioridade": "Junior",
+    "local": "Remoto",
+    "aceitaIniciante": true,
+    "descricao": "Voce ajudara a construir fluxos de cadastro e acompanhamento de viagens em React Native, trabalhando perto de produto e qualidade. As tarefas incluem componentes de interface, consumo de APIs e testes em Android e iOS. Buscamos conhecimento de JavaScript ou TypeScript, atencao aos estados de carregamento e erro e vontade de aprender em publico. Experiencia profissional e desejavel, mas um aplicativo de estudo funcional e bem documentado tambem pode demonstrar a base necessaria."
+  },
+  {
+    "id": "9",
+    "titulo": "Pessoa Analista de Qualidade Junior",
+    "empresa": "Farol QA",
+    "empresaSlug": "farol-qa",
+    "area": "QA",
+    "senioridade": "Junior",
+    "local": "Remoto",
+    "aceitaIniciante": true,
+    "descricao": "A pessoa analista de qualidade participa do refinamento das historias, prepara cenarios de teste e registra defeitos com informacoes que ajudem o time a agir. Nos primeiros meses o foco e teste exploratorio e entendimento do produto; automacao entra aos poucos com acompanhamento. Procuramos organizacao, comunicacao escrita e conhecimento inicial do ciclo de desenvolvimento. Cursos, projetos voluntarios e exercicios de teste contam como evidencia para quem ainda nao trabalhou na area."
+  },
+  {
+    "id": "10",
+    "titulo": "Pessoa Engenheira de Automacao de Testes Pleno",
+    "empresa": "Farol QA",
+    "empresaSlug": "farol-qa",
+    "area": "QA",
+    "senioridade": "Pleno",
+    "local": "Hibrido · Curitiba",
+    "aceitaIniciante": false,
+    "descricao": "Voce sera responsavel por evoluir a estrategia de automacao para produtos web, integrar testes ao fluxo de entrega e apoiar pessoas desenvolvedoras a encontrar falhas mais cedo. A posicao pede experiencia com testes de interface e API, leitura de logs e manutencao de pipelines. Esperamos bom julgamento para decidir o que automatizar e o que manter exploratorio. O trabalho e colaborativo e inclui mentoria para analistas em inicio de carreira e revisao constante dos indicadores de qualidade."
+  },
+  {
+    "id": "11",
+    "titulo": "Estagio em Design de Produto",
+    "empresa": "Ponte Digital",
+    "empresaSlug": "ponte-digital",
+    "area": "Design",
+    "senioridade": "Estagio",
+    "local": "Remoto",
+    "aceitaIniciante": true,
+    "descricao": "A vaga apoia pesquisas curtas, organizacao de fluxos e preparacao de telas para produtos de acesso a oportunidades. Voce participara de criticas de design, acompanhara metricas simples e aprendera a documentar decisoes. Buscamos familiaridade inicial com ferramentas de prototipacao, interesse por acessibilidade e capacidade de ouvir pessoas usuarias. O portfolio pode reunir trabalhos academicos e estudos pessoais; explique o problema, as escolhas e o que voce mudaria hoje."
+  },
+  {
+    "id": "12",
+    "titulo": "Pessoa Product Designer Junior",
+    "empresa": "Aurora Tech",
+    "empresaSlug": "aurora-tech",
+    "area": "Design",
+    "senioridade": "Junior",
+    "local": "Hibrido · Salvador",
+    "aceitaIniciante": false,
+    "descricao": "A pessoa designer vai cuidar de fluxos de pequenas empresas, desde a descoberta ate a entrega com desenvolvimento. A rotina inclui entrevistas, prototipos, documentacao de componentes e acompanhamento do que chegou ao produto. Pedimos alguma experiencia pratica em produto digital, mesmo que em projeto voluntario, e capacidade de apresentar o raciocinio por tras das telas. Conhecimento de acessibilidade e pesquisa qualitativa sera valorizado, assim como abertura para revisar decisoes a partir de evidencias."
   }
 ];
 
