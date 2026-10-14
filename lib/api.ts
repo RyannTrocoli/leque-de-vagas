@@ -4,8 +4,6 @@ import vagasLocais from "@/dados/vagas.json";
 import { prisma } from "@/lib/prisma";
 import type { Empresa as EmpresaDoBanco, Vaga as VagaDoBanco } from "@prisma/client";
 
-const candidaturasRecebidas: Candidatura[] = [];
-
 const FONTE_DADOS =
   process.env.FONTE_DADOS ??
   "https://raw.githubusercontent.com/ryann-trocoli/leque-de-vagas/main/dados";
@@ -117,8 +115,30 @@ export async function contarVagas(): Promise<{ total: number; iniciantes: number
   };
 }
 
-export function guardarCandidatura(candidatura: Candidatura): void {
-  candidaturasRecebidas.push(candidatura);
+export async function guardarCandidatura(candidatura: Candidatura): Promise<boolean> {
+  const vaga = await buscarVaga(candidatura.vagaId);
+  if (!vaga) return false;
+
+  await prisma.vaga.upsert({
+    where: { id: vaga.id },
+    create: vaga,
+    update: {},
+  });
+
+  await prisma.candidatura.create({
+    data: {
+      vagaId: candidatura.vagaId,
+      nome: candidatura.nome,
+      email: candidatura.email,
+      habilidades: JSON.stringify(candidatura.habilidades),
+    },
+  });
+
+  return true;
+}
+
+export async function contarCandidaturasDaVaga(vagaId: string): Promise<number> {
+  return prisma.candidatura.count({ where: { vagaId } });
 }
 
 export async function guardarEmpresa(empresa: Empresa): Promise<void> {

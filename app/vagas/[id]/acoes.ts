@@ -31,7 +31,21 @@ export async function enviarCandidatura(_: Estado, dados: FormData): Promise<Est
     };
   }
 
-  guardarCandidatura(resultado.data);
+  const guardou = await guardarCandidatura(resultado.data);
+  if (!guardou) {
+    return {
+      ok: false,
+      erros: {},
+      valores: {
+        vagaId: resultado.data.vagaId,
+        nome: resultado.data.nome,
+        email: resultado.data.email,
+        habilidades: resultado.data.habilidades.join(","),
+      },
+      mensagem: "Essa vaga não está mais disponível.",
+    };
+  }
+
   revalidatePath(`/vagas/${resultado.data.vagaId}`);
 
   return {
