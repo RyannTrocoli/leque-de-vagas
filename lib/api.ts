@@ -2,11 +2,10 @@ import type { Empresa, Vaga } from "@/lib/tipos";
 import empresasLocais from "@/dados/empresas.json";
 import vagasLocais from "@/dados/vagas.json";
 import { prisma } from "@/lib/prisma";
-import type { Vaga as VagaDoBanco } from "@prisma/client";
+import type { Empresa as EmpresaDoBanco, Vaga as VagaDoBanco } from "@prisma/client";
 
 type CandidaturaRecebida = { vagaId: string; nome: string; email: string; habilidades: string[] };
 
-const empresasEditadas = new Map<string, Empresa>();
 const candidaturasRecebidas: CandidaturaRecebida[] = [];
 
 const FONTE_DADOS =
@@ -60,17 +59,33 @@ export async function buscarVaga(id: string): Promise<Vaga | undefined> {
   return (await listarVagas()).find((vaga) => vaga.id === id);
 }
 
-export async function listarEmpresas(): Promise<Empresa[]> {
+// O banco guarda campos internos (editadaEm); as telas so conhecem o contrato Empresa.
+function empresaPublica(empresa: EmpresaDoBanco): Empresa {
+  return { slug: empresa.slug, nome: empresa.nome, sobre: empresa.sobre, site: empresa.site };
+}
+
+function empresasPublicadas(): Promise<Empresa[]> {
   // Uma hora: perfil de empresa muda bem menos que vaga. A copia local cobre a
   // rede fora do ar e o periodo em que empresas.json ainda nao chegou na main.
-  const publicadas = await buscarJson<Empresa[]>("empresas.json", 3600, "empresas", empresasLocais as Empresa[]);
+  return buscarJson<Empresa[]>("empresas.json", 3600, "empresas", empresasLocais as Empresa[]);
+}
+
+// Regra registrada no DADOS.md: quando o mesmo slug existe no JSON e no banco,
+// o banco vence, porque ele guarda a edicao feita pelo site.
+export async function listarEmpresas(): Promise<Empresa[]> {
+  const [publicadas, editadas] = await Promise.all([empresasPublicadas(), prisma.empresa.findMany()]);
   const porSlug = new Map(publicadas.map((empresa) => [empresa.slug, empresa]));
-  for (const empresa of empresasEditadas.values()) porSlug.set(empresa.slug, empresa);
+  for (const empresa of editadas) porSlug.set(empresa.slug, empresaPublica(empresa));
   return [...porSlug.values()];
 }
 
 export async function buscarEmpresa(slug: string): Promise<Empresa | undefined> {
-  return (await listarEmpresas()).find((empresa) => empresa.slug === slug);
+  // 1. o que foi editado pelo site tem prioridade
+  const editada = await prisma.empresa.findUnique({ where: { slug } });
+  if (editada) return empresaPublica(editada);
+
+  // 2. senao, vale a publicada pelo time
+  return (await empresasPublicadas()).find((empresa) => empresa.slug === slug);
 }
 
 export async function guardarVaga(vaga: Vaga): Promise<void> {
@@ -108,6 +123,8 @@ export function guardarCandidatura(candidatura: CandidaturaRecebida): void {
   candidaturasRecebidas.push(candidatura);
 }
 
-export function guardarEmpresa(empresa: Empresa): void {
-  empresasEditadas.set(empresa.slug, empresa);
+export async function guardarEmpresa(empresa: Empresa): Promise<void> {
+  // upsert: cria na primeira edicao, atualiza nas seguintes. E a regra
+  // "o banco vence" virando uma chamada so.
+  await prisma.empresa.upsert({ where: { slug: empresa.slug }, create: empresa, update: empresa });
 }

@@ -39,6 +39,7 @@ export default async function PaginaDaEmpresa({ params }: Props) {
           <h1>{empresa.nome}</h1>
           <div className="links-empresa">
             <a href={empresa.site} target="_blank" rel="noreferrer">Visitar site ↗</a>
+            <Link href={`/empresas/${slug}/editar`}>Editar perfil</Link>
           </div>
         </div>
       </header>

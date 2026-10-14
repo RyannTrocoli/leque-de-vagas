@@ -21,3 +21,13 @@ model Vaga {
   criadaEm        DateTime @default(now())
   arquivada       Boolean  @default(false)
 }
+
+// Frente 2. O slug e a chave porque ja era o identificador do projeto:
+// e o que a Vaga guarda em empresaSlug e o que aparece na URL.
+model Empresa {
+  slug      String   @id
+  nome      String
+  sobre     String
+  site      String
+  editadaEm DateTime @updatedAt
+}
