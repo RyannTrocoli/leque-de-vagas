@@ -1,9 +1,11 @@
 import type { Vaga } from "@/lib/tipos";
+import vagasLocais from "@/dados/vagas.json";
+import { prisma } from "@/lib/prisma";
+import type { Vaga as VagaDoBanco } from "@prisma/client";
 
 type EmpresaDaFonte = { slug: string; nome: string; sobre: string; site: string };
 type CandidaturaRecebida = { vagaId: string; nome: string; email: string; habilidades: string[] };
 
-const vagasCriadas: Vaga[] = [];
 const idsArquivados = new Set<string>();
 const empresasEditadas = new Map<string, EmpresaDaFonte>();
 const candidaturasRecebidas: CandidaturaRecebida[] = [];
@@ -12,20 +14,45 @@ const FONTE_DADOS =
   process.env.FONTE_DADOS ??
   "https://raw.githubusercontent.com/ryann-trocoli/leque-de-vagas/main/dados";
 
-async function buscarJson<T>(arquivo: string, revalidate: number, tag: string): Promise<T> {
-  const resposta = await fetch(`${FONTE_DADOS}/${arquivo}`, {
-    // Vagas usam 60 s para aparecerem logo; perfis de empresa mudam menos.
-    next: { revalidate, tags: [tag] },
-  });
-  if (!resposta.ok) {
-    throw new Error(`Nao foi possivel carregar ${arquivo} (${resposta.status}).`);
+async function buscarJson<T>(arquivo: string, revalidate: number, tag: string, fallback?: T): Promise<T> {
+  try {
+    const resposta = await fetch(`${FONTE_DADOS}/${arquivo}`, {
+      // Sessenta segundos limitam a espera por uma vaga publicada no JSON.
+      next: { revalidate, tags: [tag] },
+    });
+    if (!resposta.ok) {
+      throw new Error(`Nao foi possivel carregar ${arquivo} (${resposta.status}).`);
+    }
+    return (await resposta.json()) as T;
+  } catch (erro) {
+    if (fallback !== undefined) return fallback;
+    throw erro;
   }
-  return (await resposta.json()) as T;
+}
+
+function vagaPublica(vaga: VagaDoBanco): Vaga {
+  return {
+    id: vaga.id,
+    titulo: vaga.titulo,
+    empresa: vaga.empresa,
+    empresaSlug: vaga.empresaSlug,
+    area: vaga.area,
+    senioridade: vaga.senioridade,
+    local: vaga.local,
+    aceitaIniciante: vaga.aceitaIniciante,
+    descricao: vaga.descricao,
+    publicadaEm: vaga.publicadaEm ?? undefined,
+  };
 }
 
 export async function listarVagas(): Promise<Vaga[]> {
-  const publicadas = await buscarJson<Vaga[]>("vagas.json", 60, "vagas");
-  return [...vagasCriadas, ...publicadas].filter((vaga) => !idsArquivados.has(vaga.id));
+  const [publicadas, gravadas] = await Promise.all([
+    buscarJson<Vaga[]>("vagas.json", 60, "vagas", vagasLocais as Vaga[]),
+    prisma.vaga.findMany({ orderBy: { criadaEm: "desc" } }),
+  ]);
+  const idsGravados = new Set(gravadas.map((vaga) => vaga.id));
+  return [...gravadas.map(vagaPublica), ...publicadas.filter((vaga) => !idsGravados.has(vaga.id))]
+    .filter((vaga) => !idsArquivados.has(vaga.id));
 }
 
 export async function buscarVaga(id: string): Promise<Vaga | undefined> {
@@ -43,8 +70,8 @@ export async function buscarEmpresa(slug: string): Promise<EmpresaDaFonte | unde
   return (await listarEmpresas()).find((empresa) => empresa.slug === slug);
 }
 
-export function guardarVaga(vaga: Vaga): void {
-  vagasCriadas.push(vaga);
+export async function guardarVaga(vaga: Vaga): Promise<void> {
+  await prisma.vaga.create({ data: vaga });
 }
 
 export function arquivarVaga(id: string): void {

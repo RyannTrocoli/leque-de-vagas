@@ -55,7 +55,7 @@ export async function criarVaga(_: Estado, dados: FormData): Promise<Estado> {
     publicadaEm: new Date().toISOString().slice(0, 10),
   };
 
-  guardarVaga(vaga);
+  await guardarVaga(vaga);
   revalidatePath("/vagas");
   redirect(`/vagas/${vaga.id}`);
 }

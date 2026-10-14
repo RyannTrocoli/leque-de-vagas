@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Vaga {
+  id              String   @id
+  titulo          String
+  empresa         String
+  empresaSlug     String
+  area            String
+  senioridade     String
+  local           String
+  aceitaIniciante Boolean  @default(false)
+  descricao       String
+  publicadaEm     String?
+  criadaEm        DateTime @default(now())
+}
