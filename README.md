@@ -42,6 +42,8 @@ A equipe tem três pessoas. Combinado com a professora, a frente 4 é rotativa e
 | `/empresas/[slug]` | Perfil da empresa com as abas Sobre e Vagas |
 | `/empresas/[slug]/editar` | Edição do perfil da empresa |
 | `/api/empresas/[slug]` | Uma empresa em JSON (404 se não existir) |
+| `/termos` | Termos de uso no route group `(institucional)` |
+| `/privacidade` | Informações de privacidade no route group `(institucional)` |
 
 ## O estado do projeto
 
@@ -81,3 +83,18 @@ As páginas `/empresas`, `/empresas/[slug]` e `/editar` continuam no servidor: e
 - A ação revalida `/empresas` **e** `/empresas/[slug]`: são rotas com cache próprio, e avisar só uma deixaria a outra com o nome antigo.
 - O `slug` não é editável, porque é ele que liga a empresa às vagas (`empresaSlug`).
 - A partir da aula 06 a edição grava no banco. Quando o mesmo slug existe no JSON e no banco, **o banco vence**. A justificativa está no [`DADOS.md`](DADOS.md).
+
+## Frente 3 · Pessoa e candidatura
+
+| Componente de cliente | Por que precisa do navegador |
+| --- | --- |
+| `FormularioDeCandidatura` | usa `useActionState` para receber erros e sucesso da Server Action e o botão de correção precisa de interação no navegador |
+| `BotaoDeEnviar` | usa `useFormStatus` para desabilitar o envio e trocar o texto enquanto o formulário está pendente |
+| `app/vagas/[id]/error.tsx` | o botão de nova tentativa chama `reset()` para renderizar novamente o trecho que falhou |
+
+`notFound()` é usado quando a vaga procurada não existe. Repetir a mesma busca não resolveria. Já `error.tsx` trata uma falha inesperada, como um problema temporário de rede, então faz sentido oferecer uma nova tentativa.
+
+As habilidades usam checkboxes com o mesmo `name="habilidades"`. A Server Action recebe a lista com `FormData.getAll("habilidades")`. Escolhemos isso em vez de manter chips em `useState` porque o formulário continua enviando sem JavaScript e não precisa de um campo escondido sincronizado pelo navegador.
+
+Com o JavaScript desligado, o envio do formulário, a validação no servidor e o registro da candidatura continuam funcionando. O texto `Enviando…` não aparece durante a espera, e o botão `Corrigir alguma coisa` da tela de sucesso precisa do JavaScript para voltar ao formulário sem outra navegação.
+
