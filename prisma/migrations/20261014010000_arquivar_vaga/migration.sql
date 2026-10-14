@@ -1,0 +1,1 @@
+ALTER TABLE "Vaga" ADD COLUMN "arquivada" BOOLEAN NOT NULL DEFAULT false;
