@@ -9,3 +9,5 @@ export const EsquemaDaVaga = z.object({
   aceitaIniciante: z.boolean(),
   descricao: z.string().trim().min(120, "A descricao precisa ter pelo menos 120 caracteres.").max(2000, "A descricao pode ter no maximo 2.000 caracteres."),
 });
+
+export const EsquemaDoArquivo = z.object({ id: z.string().trim().min(1) });

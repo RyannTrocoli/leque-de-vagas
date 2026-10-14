@@ -19,4 +19,5 @@ model Vaga {
   descricao       String
   publicadaEm     String?
   criadaEm        DateTime @default(now())
+  arquivada       Boolean  @default(false)
 }

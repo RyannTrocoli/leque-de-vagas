@@ -6,7 +6,6 @@ import type { Vaga as VagaDoBanco } from "@prisma/client";
 type EmpresaDaFonte = { slug: string; nome: string; sobre: string; site: string };
 type CandidaturaRecebida = { vagaId: string; nome: string; email: string; habilidades: string[] };
 
-const idsArquivados = new Set<string>();
 const empresasEditadas = new Map<string, EmpresaDaFonte>();
 const candidaturasRecebidas: CandidaturaRecebida[] = [];
 
@@ -51,8 +50,10 @@ export async function listarVagas(): Promise<Vaga[]> {
     prisma.vaga.findMany({ orderBy: { criadaEm: "desc" } }),
   ]);
   const idsGravados = new Set(gravadas.map((vaga) => vaga.id));
-  return [...gravadas.map(vagaPublica), ...publicadas.filter((vaga) => !idsGravados.has(vaga.id))]
-    .filter((vaga) => !idsArquivados.has(vaga.id));
+  return [
+    ...gravadas.filter((vaga) => !vaga.arquivada).map(vagaPublica),
+    ...publicadas.filter((vaga) => !idsGravados.has(vaga.id)),
+  ];
 }
 
 export async function buscarVaga(id: string): Promise<Vaga | undefined> {
@@ -74,8 +75,31 @@ export async function guardarVaga(vaga: Vaga): Promise<void> {
   await prisma.vaga.create({ data: vaga });
 }
 
-export function arquivarVaga(id: string): void {
-  idsArquivados.add(id);
+export async function arquivarVaga(id: string): Promise<void> {
+  const vaga = await buscarVaga(id);
+  if (!vaga) return;
+  // O registro preserva uma vaga do JSON mesmo se ela ainda não existia no banco.
+  await prisma.vaga.upsert({
+    where: { id },
+    create: { ...vaga, arquivada: true },
+    update: { arquivada: true },
+  });
+}
+
+export async function contarVagas(): Promise<{ total: number; iniciantes: number }> {
+  const [publicadas, gravadas, totalDoBanco] = await Promise.all([
+    buscarJson<Vaga[]>("vagas.json", 60, "vagas", vagasLocais as Vaga[]),
+    prisma.vaga.findMany({ select: { id: true, arquivada: true, aceitaIniciante: true } }),
+    prisma.vaga.count({ where: { arquivada: false } }),
+  ]);
+  const idsGravados = new Set(gravadas.map((vaga) => vaga.id));
+  const apenasNoJson = publicadas.filter((vaga) => !idsGravados.has(vaga.id));
+  return {
+    total: totalDoBanco + apenasNoJson.length,
+    iniciantes:
+      gravadas.filter((vaga) => !vaga.arquivada && vaga.aceitaIniciante).length +
+      apenasNoJson.filter((vaga) => vaga.aceitaIniciante).length,
+  };
 }
 
 export function guardarCandidatura(candidatura: CandidaturaRecebida): void {
