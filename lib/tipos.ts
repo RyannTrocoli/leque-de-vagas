@@ -19,6 +19,13 @@ export type Empresa = {
   site: string;
 };
 
+export type Candidatura = {
+  vagaId: string;
+  nome: string;
+  email: string;
+  habilidades: string[];
+};
+
 export type Estado = {
   ok: boolean;
   erros: Record<string, string>;

@@ -17,4 +17,7 @@ _A preencher pelo Ryann._
 
 ## Candidatura (frente 3 · Gabriel)
 
-_A preencher pelo Gabriel._
+- Cada candidatura pertence a uma `Vaga` por `vagaId`, com a relação definida no Prisma.
+- Algumas vagas vêm de `dados/vagas.json` e ainda não existem no SQLite. Antes de gravar a candidatura, copiamos a vaga para a tabela `Vaga` com `upsert`, garantindo que a chave estrangeira exista.
+- Como o SQLite não tem uma lista de strings como campo simples, `habilidades` é armazenado como texto usando `JSON.stringify(habilidades)`.
+- Nome e e-mail ficam gravados na candidatura. Se alguém pedir para apagar a própria candidatura, o e-mail armazenado pode ser usado para localizar e confirmar qual registro deve ser removido.

@@ -20,6 +20,7 @@ model Vaga {
   publicadaEm     String?
   criadaEm        DateTime @default(now())
   arquivada       Boolean  @default(false)
+  candidaturas    Candidatura[]
 }
 
 // Frente 2. O slug e a chave porque ja era o identificador do projeto:
@@ -30,4 +31,14 @@ model Empresa {
   sobre     String
   site      String
   editadaEm DateTime @updatedAt
+}
+
+model Candidatura {
+  id          String   @id @default(uuid())
+  vagaId      String
+  vaga        Vaga     @relation(fields: [vagaId], references: [id])
+  nome        String
+  email       String
+  habilidades String
+  criadaEm    DateTime @default(now())
 }

@@ -19,3 +19,10 @@ export const EsquemaDaEmpresa = z.object({
 });
 
 export const EsquemaDoArquivo = z.object({ id: z.string().trim().min(1) });
+
+export const EsquemaDaCandidatura = z.object({
+  vagaId: z.string().trim().min(1, "Vaga inválida."),
+  nome: z.string().trim().min(3, "Informe um nome com pelo menos 3 caracteres."),
+  email: z.email("Informe um e-mail válido."),
+  habilidades: z.array(z.string().trim().min(1)).min(1, "Escolha pelo menos uma habilidade."),
+});

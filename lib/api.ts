@@ -1,12 +1,8 @@
-import type { Empresa, Vaga } from "@/lib/tipos";
+import type { Candidatura, Empresa, Vaga } from "@/lib/tipos";
 import empresasLocais from "@/dados/empresas.json";
 import vagasLocais from "@/dados/vagas.json";
 import { prisma } from "@/lib/prisma";
 import type { Empresa as EmpresaDoBanco, Vaga as VagaDoBanco } from "@prisma/client";
-
-type CandidaturaRecebida = { vagaId: string; nome: string; email: string; habilidades: string[] };
-
-const candidaturasRecebidas: CandidaturaRecebida[] = [];
 
 const FONTE_DADOS =
   process.env.FONTE_DADOS ??
@@ -119,8 +115,30 @@ export async function contarVagas(): Promise<{ total: number; iniciantes: number
   };
 }
 
-export function guardarCandidatura(candidatura: CandidaturaRecebida): void {
-  candidaturasRecebidas.push(candidatura);
+export async function guardarCandidatura(candidatura: Candidatura): Promise<boolean> {
+  const vaga = await buscarVaga(candidatura.vagaId);
+  if (!vaga) return false;
+
+  await prisma.vaga.upsert({
+    where: { id: vaga.id },
+    create: vaga,
+    update: {},
+  });
+
+  await prisma.candidatura.create({
+    data: {
+      vagaId: candidatura.vagaId,
+      nome: candidatura.nome,
+      email: candidatura.email,
+      habilidades: JSON.stringify(candidatura.habilidades),
+    },
+  });
+
+  return true;
+}
+
+export async function contarCandidaturasDaVaga(vagaId: string): Promise<number> {
+  return prisma.candidatura.count({ where: { vagaId } });
 }
 
 export async function guardarEmpresa(empresa: Empresa): Promise<void> {

@@ -2,7 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import BotaoCopiarLink from "@/components/BotaoCopiarLink";
 import DescricaoDaVaga from "@/components/DescricaoDaVaga";
-import { buscarVaga, listarVagas } from "@/lib/api";
+import FormularioDeCandidatura from "@/components/FormularioDeCandidatura";
+import { buscarVaga, contarCandidaturasDaVaga, listarVagas } from "@/lib/api";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -14,6 +15,7 @@ export default async function PaginaDaVaga({ params }: Props) {
   const { id } = await params;
   const vaga = await buscarVaga(id);
   if (!vaga) notFound();
+  const totalDeCandidaturas = await contarCandidaturasDaVaga(vaga.id);
 
   return (
     <main className="container pagina-detalhe">
@@ -28,6 +30,8 @@ export default async function PaginaDaVaga({ params }: Props) {
         </dl>
         <h2>Descrição</h2>
         <DescricaoDaVaga texto={vaga.descricao} />
+        <p className="metadados">{totalDeCandidaturas} candidatura(s) recebida(s)</p>
+        <FormularioDeCandidatura vagaId={vaga.id} tituloDaVaga={vaga.titulo} />
         <BotaoCopiarLink />
       </article>
     </main>
