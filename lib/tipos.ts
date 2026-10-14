@@ -10,3 +10,12 @@ export type Vaga = {
   descricao: string;
   publicadaEm?: string;
 };
+
+export type Estado = {
+  ok: boolean;
+  erros: Record<string, string>;
+  valores: Record<string, string>;
+  mensagem?: string;
+};
+
+export const ESTADO_INICIAL: Estado = { ok: false, erros: {}, valores: {} };
