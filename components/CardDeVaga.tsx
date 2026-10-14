@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { Vaga } from "@/data/vagas";
+import type { Vaga } from "@/lib/tipos";
 
 export default function CardDeVaga({ vaga, acao }: { vaga: Vaga; acao?: React.ReactNode }) {
   return (

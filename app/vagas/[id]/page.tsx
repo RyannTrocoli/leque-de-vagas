@@ -2,13 +2,17 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import BotaoCopiarLink from "@/components/BotaoCopiarLink";
 import DescricaoDaVaga from "@/components/DescricaoDaVaga";
-import { vagas } from "@/data/vagas";
+import { buscarVaga, listarVagas } from "@/lib/api";
 
 type Props = { params: Promise<{ id: string }> };
 
+export async function generateStaticParams() {
+  return (await listarVagas()).map((vaga) => ({ id: vaga.id }));
+}
+
 export default async function PaginaDaVaga({ params }: Props) {
   const { id } = await params;
-  const vaga = vagas.find((item) => item.id === id);
+  const vaga = await buscarVaga(id);
   if (!vaga) notFound();
 
   return (

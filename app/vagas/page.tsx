@@ -1,7 +1,8 @@
 import CardDeVaga from "@/components/CardDeVaga";
-import { vagas } from "@/data/vagas";
+import { listarVagas } from "@/lib/api";
 
-export default function PaginaDeVagas() {
+export default async function PaginaDeVagas() {
+  const vagas = await listarVagas();
   return (
     <main className="container pagina-listagem">
       <h1>Vagas de tecnologia</h1>
